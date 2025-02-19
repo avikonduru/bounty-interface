@@ -24,14 +24,46 @@ import {
 	createListCollection,
 	Stack,
 	Tabs,
-	Avatar,
+	HStack,
 } from '@chakra-ui/react';
+import { Avatar } from '@/components/ui/avatar';
 import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { FaXTwitter, FaLock, FaUnlock, FaGithub } from 'react-icons/fa6';
 import { LuFolder, LuSquareCheck, LuUser } from 'react-icons/lu';
 
 const HomePage = () => {
+	const tokens = createListCollection({
+		items: [
+			{
+				name: 'USDC',
+				id: 'usdc',
+				avatar: '/cryptoLogos/usdc.svg',
+			},
+		],
+		itemToString: (item) => item.name,
+		itemToValue: (item) => item.id,
+	});
+
+	const SelectValueItem = () => (
+		<SelectValueText placeholder="Select movie">
+			{(items: Array<{ name: string; avatar: string }>) => {
+				const { name, avatar } = items[0];
+				return (
+					<HStack>
+						<Avatar
+							shape="rounded"
+							name={name}
+							size="2xs"
+							src={avatar}
+						/>
+						{name}
+					</HStack>
+				);
+			}}
+		</SelectValueText>
+	);
+
 	return (
 		<Fragment>
 			<Navbar />
@@ -106,6 +138,35 @@ const HomePage = () => {
 																width="100%"
 																mr="4"
 															/>
+
+															<SelectRoot
+																collection={tokens}
+																size="md"
+																width="230px"
+																defaultValue={['usdc']}
+																positioning={{ sameWidth: true }}
+															>
+																<SelectTrigger>
+																	<SelectValueItem />
+																</SelectTrigger>
+																<SelectContent portalled={false}>
+																	{tokens.items.map((item) => (
+																		<SelectItem
+																			item={item}
+																			key={item.id}
+																			justifyContent="flex-start"
+																		>
+																			<Avatar
+																				shape="rounded"
+																				name={item.name}
+																				src={item.avatar}
+																				size="2xs"
+																			/>
+																			{item.name}
+																		</SelectItem>
+																	))}
+																</SelectContent>
+															</SelectRoot>
 														</Flex>
 													</Box>
 
